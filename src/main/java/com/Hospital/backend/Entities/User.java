@@ -9,13 +9,26 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String firstname;
+
+    @Column(nullable = false)
     private String lastname;
+
+    @Column(nullable = false)
     private String username;
+
+    @Column(nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String number;
+
+    @Column(nullable = false)
     private String password;
-    private Boolean isAdmin;
+
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
+    private Boolean isAdmin = false;
 
     //getters and setters
 
