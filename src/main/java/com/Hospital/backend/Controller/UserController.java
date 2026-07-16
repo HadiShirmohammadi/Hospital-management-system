@@ -27,7 +27,7 @@ public class UserController {
         Optional<User> userOpt = userService.findByUsername(loginRequest.getUsername());
         if (userOpt.isPresent()){
             User user = userOpt.get();
-            if (user.getPassword().equals(loginRequest.getPassword())){
+            if (userService.checkPassword(loginRequest.getPassword(),user.getPassword())){
                 return ResponseEntity.ok(user);
             }
         }
