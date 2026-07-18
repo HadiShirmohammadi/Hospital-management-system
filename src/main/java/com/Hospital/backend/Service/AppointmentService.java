@@ -1,5 +1,6 @@
 package com.Hospital.backend.Service;
 
+import com.Hospital.backend.Dto.AppointmentSummary;
 import com.Hospital.backend.Entities.Appointment;
 import com.Hospital.backend.Entities.User;
 import com.Hospital.backend.Repository.AppointmentRepository;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
@@ -19,6 +21,21 @@ public class AppointmentService {
     //Get all Appointment
     public List<Appointment> getAllAppointments(){
         return appointmentRepository.findAll();
+    }
+    //Get appointment by user id
+    public List<AppointmentSummary> getAppoinmentsByUserId(Long userId){
+        List<Appointment> appointments = appointmentRepository.findByUserId(userId);
+        List<AppointmentSummary> summaries = appointments.stream()
+                .map(appointment -> new AppointmentSummary(
+                        appointment.getId(),
+                        appointment.getDoctor(),
+                        appointment.getTitle(),
+                        appointment.getPlace(),
+                        appointment.getDate().toString(),
+                        appointment.getTime().toString()
+                ))
+                .collect(Collectors.toList());
+        return summaries;
     }
     //Add Appointment
     public Appointment addAppointment(Appointment appointment){
@@ -46,4 +63,5 @@ public class AppointmentService {
         appointment.setUser(null);
         return appointmentRepository.save(appointment);
     }
+
 }
