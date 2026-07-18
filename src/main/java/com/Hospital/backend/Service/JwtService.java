@@ -44,6 +44,15 @@ public class JwtService {
                 .getBody();
         return claims.getSubject();
     }
+    // Get admin user
+    public boolean extractIsAdmin(String token){
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("isAdmin",Boolean.class);
+    }
     // Understanding whether a key is correct or incorrect
     public boolean isTokenValid(String token){
         try {
