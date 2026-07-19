@@ -39,7 +39,7 @@ src/main/java/com/Hospital/backend/
 ├── Dto/
 │   ├── AuthResponse.java              # Returned after register/login (token + basic info)
 │   ├── UserProfileResponse.java       # Returned by /auth/check (profile + appointments)
-│   └── AppointmentSummary.java        # Safe, flattened appointment data (no nested User)
+│   └── AppointmentSummary.java        # Safe, flattened appointment data (optionally includes reservedByUsername)
 ├── Entities/
 │   ├── User.java
 │   └── Appointment.java
@@ -207,7 +207,7 @@ Requires header: `Authorization: Bearer <token>`
 
 ### Hospital / Appointment Endpoints (`/hospital`)
 
-All endpoints below except `GET /hospital/appointments` require a valid JWT in the `Authorization` header. `POST /hospital/add` and `DELETE /hospital/delete/{id}` additionally require the `ADMIN` role.
+All endpoints below except `GET /hospital/appointments` require a valid JWT in the `Authorization` header. `POST /hospital/add`, `DELETE /hospital/delete/{id}`, and `GET /hospital/admin/appointment` additionally require the `ADMIN` role.
 
 #### Get all appointments (public)
 ```
@@ -231,24 +231,57 @@ Request body:
 
 #### Reserve an appointment
 ```
-POST /hospital/reserve/{appointmentId}/{userId}
+POST /hospital/reserve/{appointmentId}
 ```
+Requires header: `Authorization: Bearer <token>`
+
+The reserving user is identified from the JWT (`Authentication`), **not** from a client-supplied ID — this prevents a user from reserving an appointment on someone else's behalf.
+
+Response `200 OK`:
+```json
+{
+  "id": 1,
+  "doctor": "Dr. Smith",
+  "title": "General Checkup",
+  "place": "Room 204",
+  "date": "2026-07-01",
+  "time": "10:00"
+}
+```
+Response `400 Bad Request` if the appointment is already reserved or doesn't exist.
+Response `404 Not Found` if the authenticated user no longer exists.
 
 #### Un-reserve an appointment
 ```
 POST /hospital/unreserve/{appointmentId}
 ```
+Requires header: `Authorization: Bearer <token>`
 
 #### Delete an appointment (admin only)
 ```
 DELETE /hospital/delete/{id}
 ```
 
-## Security Notes / Known TODOs
+#### Get all appointments with the reserving user's username (admin only)
+```
+GET /hospital/admin/appointment
+```
+Requires header: `Authorization: Bearer <token>` with the `ADMIN` role.
 
-- `reserve`/`unreserve` currently take `userId` as a path variable rather than deriving it from the authenticated JWT — this should be refactored to use `Authentication` (as done in `/auth/check`) so a user cannot reserve an appointment on someone else's behalf.
-- `isAdmin` status is embedded in the JWT at issue time; if an admin's role is revoked, existing tokens remain valid (with the old role) until they expire (12h). Role checks that go through the database (`/auth/admin`) are always up to date; checks based purely on token claims are not.
-- Passwords are hashed with BCrypt and never returned in any API response.
+Returns only appointments that have been reserved, including who reserved each one:
+```json
+[
+  {
+    "id": 1,
+    "doctor": "Dr. Smith",
+    "title": "General Checkup",
+    "place": "Room 204",
+    "date": "2026-07-01",
+    "time": "10:00",
+    "reservedByUsername": "Abolfazl"
+  }
+]
+```
 
 ## Learning Goals
 
