@@ -7,6 +7,7 @@ public class AppointmentSummary {
     private String place;
     private String date;
     private String time;
+    private String reservedByUsername;
 
     public AppointmentSummary(Long id, String doctor, String title, String place, String date, String time) {
         this.id = id;
@@ -15,6 +16,16 @@ public class AppointmentSummary {
         this.place = place;
         this.date = date;
         this.time = time;
+    }
+
+    public AppointmentSummary(Long id, String doctor, String title, String place, String date, String time,String reservedByUsername) {
+        this.id = id;
+        this.doctor = doctor;
+        this.title = title;
+        this.place = place;
+        this.date = date;
+        this.time = time;
+        this.reservedByUsername = reservedByUsername;
     }
 
     public Long getId() {
@@ -63,5 +74,13 @@ public class AppointmentSummary {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getReservedByUsername() {
+        return reservedByUsername;
+    }
+
+    public void setReservedByUsername(String reservedByUsername) {
+        this.reservedByUsername = reservedByUsername;
     }
 }

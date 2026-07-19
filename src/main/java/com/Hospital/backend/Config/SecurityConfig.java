@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/hospital/appointments").permitAll()
                         .requestMatchers(HttpMethod.POST,"/hospital/add").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,"/hospital/delete/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/hospital/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
