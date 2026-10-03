@@ -35,7 +35,7 @@ public class Appointment {
     @JoinColumn(name = "userId")
     private User user;
 
-    //Getters and Setters
+//    Getters and Setters
 
     public Long getId() {
         return id;
