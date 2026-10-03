@@ -32,7 +32,8 @@ public class AppointmentService {
                         appointment.getTitle(),
                         appointment.getPlace(),
                         appointment.getDate().toString(),
-                        appointment.getTime().toString()
+                        appointment.getTime().toString(),
+                        appointment.getReserved()
                 ))
                 .collect(Collectors.toList());
         return summaries;

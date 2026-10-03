@@ -89,7 +89,7 @@ public class User {
     }
 
     public Boolean getAdmin() {
-        return isAdmin;
+        return isAdmin != null && isAdmin;
     }
 
     public void setAdmin(Boolean admin) {

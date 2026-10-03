@@ -35,7 +35,8 @@ public class AppointmentController {
                     appointment.getTitle(),
                     appointment.getPlace(),
                     appointment.getDate().toString(),
-                    appointment.getTime().toString()
+                    appointment.getTime().toString(),
+                    appointment.getReserved()
             );
             appointmentList.add(summary);
         }
@@ -69,7 +70,8 @@ public class AppointmentController {
                         updateAppointment.getTitle(),
                         updateAppointment.getPlace(),
                         updateAppointment.getDate().toString(),
-                        updateAppointment.getTime().toString()
+                        updateAppointment.getTime().toString(),
+                        updateAppointment.getReserved()
                 );
                 return ResponseEntity.ok(appointmentSummary);
             }catch (RuntimeException e){
